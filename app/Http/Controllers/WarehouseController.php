@@ -17,7 +17,7 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        $warehouses = Warehouse::query()->with("supplier")->get();
+        $warehouses = Warehouse::query()->with("supplier")->paginate(5);
         return Inertia::render('Warehouses/Index', ['warehouses' => $warehouses, "notification" => Session::get('notification')]);
     }
 

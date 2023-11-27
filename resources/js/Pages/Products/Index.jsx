@@ -5,7 +5,6 @@ import { Store } from "react-notifications-component";
 import { defaultNotification } from "@/Helpers/notificationHelper.js"
 
 const Index = ({ products, notification }) => {
-    console.log(products);
     useEffect(() => {
         if (notification) {
             Store.addNotification({

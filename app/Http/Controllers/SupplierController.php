@@ -16,7 +16,8 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $suppliers = Supplier::all();
+
+        $suppliers = Supplier::paginate(5);
         return Inertia::render('Suppliers/Index', ['suppliers' => $suppliers, "notification" => Session::get('notification')]);
     }
 

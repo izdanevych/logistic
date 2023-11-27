@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Layout from '../../Layouts/Layout';
-import { router } from '@inertiajs/react';
+import {Link, router} from '@inertiajs/react';
 import { Store } from "react-notifications-component";
 import { defaultNotification } from "@/Helpers/notificationHelper.js";
 
@@ -56,7 +56,7 @@ const Index = ({ warehouses, notification }) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {warehouses.map((warehouse) => (
+                    {warehouses.data.map((warehouse) => (
                         <tr key={warehouse.id} className="hover:bg-gray-100">
                             <td className="py-2 px-4 border-b w-1/4">{warehouse.id}</td>
                             <td className="py-2 px-4 border-b w-1/4">{warehouse.supplier.name}</td>
@@ -69,6 +69,17 @@ const Index = ({ warehouses, notification }) => {
                     ))}
                     </tbody>
                 </table>
+                <div className="mt-4">
+                    {warehouses.links.map((link, index) => (
+                        <Link
+                            key={index}
+                            href={link.url}
+                            className={`inline-block px-4 py-2 mx-2 bg-blue-500 text-white rounded-md ${link.active ? 'bg-blue-700' : ''}`}
+                        >
+                            { link.label.replaceAll('&laquo;', '').replaceAll('&raquo;', '') }
+                        </Link>
+                    ))}
+                </div>
             </div>
         </Layout>
     );
