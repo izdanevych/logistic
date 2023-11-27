@@ -11,7 +11,7 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,29 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required',
+            'price' => 'required',
+            'supplier_id' => 'required|integer',
+            'warehouse_id' => 'required|integer'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name' => [
+                'required' => 'Name field is required'
+            ],
+            'price' => [
+                'required' => 'Price field is required',
+                'numeric' => 'Invalid price'
+            ],
+            'warehouse_id' => [
+                'required' => 'Warehouse field is required',
+            ],
+            'supplier_id' => [
+                'required' => 'Supplier field is required',
+            ]
         ];
     }
 }

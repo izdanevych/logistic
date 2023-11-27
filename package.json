@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "@inertiajs/inertia": "^0.11.1",
-        "@inertiajs/inertia-react": "^0.8.1"
+        "react-currency-input-field": "^3.6.12",
+        "react-notifications-component": "^4.0.1"
     }
 }

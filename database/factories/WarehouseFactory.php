@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,8 @@ class WarehouseFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'supplier_id' => Supplier::query()->inRandomOrder()->first()->id,
+            'address' => fake()->address,
         ];
     }
 }

@@ -1,20 +1,20 @@
-
 import React, { useState } from 'react';
-import { router, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import Layout from '../../Layouts/Layout';
+import { router } from '@inertiajs/react';
 
-const Create = ({csrf_token}) => {
-    const {data, setData} = useForm({
-        // Your form data and initial values
+const Edit = ({ supplier }) => {
+    const { data, setData } = useForm({
+        name: supplier.name,
+        address: supplier.address,
     });
 
     const [errors, setErrors] = useState({});
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        router.post('/suppliers', data,{
+        router.put(route('suppliers.update', supplier.id), data, {
             onSuccess: () => {
-                // redirect to index in controller
+
             },
             onError: (errors) => {
                 setErrors(errors);
@@ -25,10 +25,9 @@ const Create = ({csrf_token}) => {
     return (
         <Layout>
             <div>
-                <h1 className="text-2xl font-bold mb-4">Create supplier</h1>
-                {/* Create form */}
+                <h1 className="text-2xl font-bold mb-4">Edit Supplier</h1>
+                {/* Edit form */}
                 <form onSubmit={handleSubmit}>
-                    <input type="hidden" name="_token" value={csrf_token} />
                     <div className="mb-4">
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                             Name
@@ -37,7 +36,7 @@ const Create = ({csrf_token}) => {
                             id="name"
                             type="text"
                             className={`mt-1 p-2 border rounded-md ${errors.name ? 'border-red-500' : ''}`}
-                            value={data.name ?? ""}
+                            value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
                         />
                         {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
@@ -50,14 +49,14 @@ const Create = ({csrf_token}) => {
                             id="address"
                             type="text"
                             className={`mt-1 p-2 border rounded-md ${errors.address ? 'border-red-500' : ''}`}
-                            value={data.address ?? ""}
+                            value={data.address}
                             onChange={(e) => setData('address', e.target.value)}
                         />
                         {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
                     </div>
                     <div>
                         <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md">
-                            Create Supplier
+                            Edit supplier
                         </button>
                     </div>
                 </form>
@@ -66,4 +65,4 @@ const Create = ({csrf_token}) => {
     );
 };
 
-export default Create;
+export default Edit;

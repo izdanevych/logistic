@@ -11,7 +11,7 @@ class UpdateWarehouseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class UpdateWarehouseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'supplier_id' => 'required|integer',
+            'address' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'supplier_id' => ['required' => 'Supplier field is required']
         ];
     }
 }

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
 use App\Models\Supplier;
+use Exception;
 use Inertia\Inertia;
+use Session;
 
 class SupplierController extends Controller
 {
@@ -15,7 +17,7 @@ class SupplierController extends Controller
     public function index()
     {
         $suppliers = Supplier::all();
-        return Inertia::render('Suppliers/Index', ['suppliers' => $suppliers]);
+        return Inertia::render('Suppliers/Index', ['suppliers' => $suppliers, "notification" => Session::get('notification')]);
     }
 
     /**
@@ -31,18 +33,23 @@ class SupplierController extends Controller
      */
     public function store(StoreSupplierRequest $request)
     {
-        // Validate and store the new supplier
-        $request->validate([
-            'name' => 'required',
-            'address' => 'required',
-        ]);
+        try {
+            Supplier::create($request->all());
 
-        $suplier = new Supplier();
-        $suplier->name = $request->input("name");
-        $suplier->address = $request->input("address");
-        $suplier->save();
-
-        return redirect()->route('suppliers.index');
+            return redirect()->route('suppliers.index')
+                ->with('notification', [
+                    'title' => 'Success',
+                    'type' => 'success',
+                    'message' => 'Supplier was successfully created'
+                ]);
+        } catch (Exception $ex){
+            return redirect()->route('suppliers.index')
+                ->with('notification', [
+                    'title' => 'Error',
+                    'type' => 'danger',
+                    'message' => 'Supplier was not successfully created'
+                ]);
+        }
     }
 
     /**
@@ -50,7 +57,7 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier)
     {
-        //
+
     }
 
     /**
@@ -58,7 +65,7 @@ class SupplierController extends Controller
      */
     public function edit(Supplier $supplier)
     {
-        //
+        return Inertia::render('Suppliers/Edit', ['supplier' => $supplier]);
     }
 
     /**
@@ -66,7 +73,23 @@ class SupplierController extends Controller
      */
     public function update(UpdateSupplierRequest $request, Supplier $supplier)
     {
-        //
+        try {
+            $supplier->update($request->all());
+
+            return redirect()->route('suppliers.index')
+                ->with('notification', [
+                    'title' => 'Success',
+                    'type' => 'success',
+                    'message' => 'Supplier was successfully edited'
+                ]);
+        } catch (Exception $ex){
+            return redirect()->route('suppliers.index')
+                ->with('notification', [
+                    'title' => 'Error',
+                    'type' => 'danger',
+                    'message' => 'Supplier was not successfully edited'
+                ]);
+        }
     }
 
     /**
@@ -74,6 +97,21 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
-        //
+        try {
+            $supplier->delete();
+            return redirect()->route('suppliers.index')
+                ->with('notification', [
+                    'title' => 'Success',
+                    'type' => 'success',
+                    'message' => 'Supplier was successfully deleted'
+                ]);
+        } catch (Exception $ex){
+            return redirect()->route('suppliers.index')
+                ->with('notification', [
+                    'title' => 'Error',
+                    'type' => 'danger',
+                    'message' => 'Supplier was not successfully deleted'
+                ]);
+        }
     }
 }

@@ -22,7 +22,16 @@ class StoreSupplierRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required',
+            'address' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name' => ['required' => 'Name field is required'],
+            'address' => ['required' => 'Address field is required']
         ];
     }
 }

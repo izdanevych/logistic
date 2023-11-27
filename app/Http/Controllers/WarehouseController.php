@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWarehouseRequest;
 use App\Http\Requests\UpdateWarehouseRequest;
+use App\Models\Supplier;
 use App\Models\Warehouse;
+use Exception;
+use Inertia\Inertia;
+use Session;
 
 class WarehouseController extends Controller
 {
@@ -13,7 +17,8 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        //
+        $warehouses = Warehouse::query()->with("supplier")->get();
+        return Inertia::render('Warehouses/Index', ['warehouses' => $warehouses, "notification" => Session::get('notification')]);
     }
 
     /**
@@ -21,7 +26,8 @@ class WarehouseController extends Controller
      */
     public function create()
     {
-        //
+        $suppliers = Supplier::all();
+        return Inertia::render('Warehouses/Create', ['suppliers' => $suppliers, 'csrf_token' => csrf_token()]);
     }
 
     /**
@@ -29,7 +35,23 @@ class WarehouseController extends Controller
      */
     public function store(StoreWarehouseRequest $request)
     {
-        //
+        try {
+            Warehouse::create($request->all());
+
+            return redirect()->route('warehouses.index')
+                ->with('notification', [
+                    'title' => 'Success',
+                    'type' => 'success',
+                    'message' => 'Warehouse was successfully created'
+                ]);
+        } catch (Exception $ex) {
+            return redirect()->route('warehouses.index')
+                ->with('notification', [
+                    'title' => 'Error',
+                    'type' => 'danger',
+                    'message' => 'Warehouse was not successfully created'
+                ]);
+        }
     }
 
     /**
@@ -45,7 +67,8 @@ class WarehouseController extends Controller
      */
     public function edit(Warehouse $warehouse)
     {
-        //
+        $suppliers = Supplier::all();
+        return Inertia::render('Warehouses/Edit', ['warehouse' => $warehouse, 'suppliers' => $suppliers]);
     }
 
     /**
@@ -53,7 +76,23 @@ class WarehouseController extends Controller
      */
     public function update(UpdateWarehouseRequest $request, Warehouse $warehouse)
     {
-        //
+        try {
+            $warehouse->update($request->all());
+
+            return redirect()->route('warehouses.index')
+                ->with('notification', [
+                    'title' => 'Success',
+                    'type' => 'success',
+                    'message' => 'Warehouse was successfully edited'
+                ]);
+        } catch (Exception $ex) {
+            return redirect()->route('warehouses.index')
+                ->with('notification', [
+                    'title' => 'Error',
+                    'type' => 'danger',
+                    'message' => 'Warehouse was not successfully edited'
+                ]);
+        }
     }
 
     /**
@@ -61,6 +100,21 @@ class WarehouseController extends Controller
      */
     public function destroy(Warehouse $warehouse)
     {
-        //
+        try {
+            $warehouse->delete();
+            return redirect()->route('warehouses.index')
+                ->with('notification', [
+                    'title' => 'Success',
+                    'type' => 'success',
+                    'message' => 'Warehouse was successfully deleted'
+                ]);
+        } catch (Exception $ex) {
+            return redirect()->route('warehouses.index')
+                ->with('notification', [
+                    'title' => 'Error',
+                    'type' => 'danger',
+                    'message' => 'Warehouse was not successfully deleted'
+                ]);
+        }
     }
 }
